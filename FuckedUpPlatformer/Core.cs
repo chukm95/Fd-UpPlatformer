@@ -108,20 +108,6 @@ namespace FuckedUpPlatformer
             _basicBasicShader = _shaderManager.LoadShader("Assets\\Shaders\\BasicBasicShader.fsf");
             _su_projectionMatrix = _basicBasicShader["projectionMatrix"];
             _su_transformMatrix = _basicBasicShader["transformMatrix"];
-
-            //_vertexArrayObject = GL.GenVertexArray();
-            //GL.BindVertexArray(_vertexArrayObject);
-
-            //_indexBuffer = GL.GenBuffer();
-            //GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indexBuffer);
-            //GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length, _indices, BufferUsageHint.StaticDraw);
-
-            //_vertexBuffer = GL.GenBuffer();
-            //GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBuffer);
-            //GL.BufferData(BufferTarget.ArrayBuffer, Vector3.SizeInBytes * _vertices.Length, _vertices, BufferUsageHint.StaticDraw);
-            //GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, Vector3.SizeInBytes, 0);
-
-            //GL.BindVertexArray(0);
         }
 
         private void GameLoop()
@@ -136,12 +122,6 @@ namespace FuckedUpPlatformer
                 _basicBasicShader.Bind();
                 _su_projectionMatrix.SetUniform(Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(72f), 1920f / 1080f, 1, 10000));
                 _su_transformMatrix.SetUniform(Matrix4.CreateTranslation(new Vector3(0, 0, -1000)));
-
-                //GL.BindVertexArray(_vertexArrayObject);
-                //GL.EnableVertexAttribArray(0);
-                //GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedByte, IntPtr.Zero);
-                //GL.DisableVertexAttribArray(0);
-                //GL.BindVertexArray(0);
 
                 _graphicsBuffer.Draw(_indices.Length);
 
