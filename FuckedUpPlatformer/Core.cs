@@ -55,9 +55,9 @@ namespace FuckedUpPlatformer
         private VertexPositionColor[] _vertexPositionColors = new VertexPositionColor[]
         {
             new VertexPositionColor{ Position = new Vector3(-32, 32, 0), Color = (Vector4)Color4.Red},
-            new VertexPositionColor{ Position = new Vector3(32, 32, 0), Color = (Vector4)Color4.Red},
-            new VertexPositionColor{ Position = new Vector3(32, -32, 0), Color = (Vector4)Color4.Red},
-            new VertexPositionColor{ Position = new Vector3(-32, -32, 0), Color = (Vector4)Color4.Red}
+            new VertexPositionColor{ Position = new Vector3(32, 32, 0), Color = (Vector4)Color4.Blue},
+            new VertexPositionColor{ Position = new Vector3(32, -32, 0), Color = (Vector4)Color4.Green},
+            new VertexPositionColor{ Position = new Vector3(-32, -32, 0), Color = (Vector4)Color4.Purple}
         };
 
         private Shader _basicBasicShader;
@@ -135,7 +135,7 @@ namespace FuckedUpPlatformer
                 GL.Clear(ClearBufferMask.DepthBufferBit | ClearBufferMask.ColorBufferBit);
                 _basicBasicShader.Bind();
                 _su_projectionMatrix.SetUniform(Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(72f), 1920f / 1080f, 1, 10000));
-                _su_transformMatrix.SetUniform(Matrix4.CreateTranslation(new Vector3(0, 0, -2000)));
+                _su_transformMatrix.SetUniform(Matrix4.CreateTranslation(new Vector3(0, 0, -1000)));
 
                 //GL.BindVertexArray(_vertexArrayObject);
                 //GL.EnableVertexAttribArray(0);

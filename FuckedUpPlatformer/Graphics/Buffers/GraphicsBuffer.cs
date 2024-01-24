@@ -1,6 +1,5 @@
 ﻿using FuckedUpPlatformer.Graphics.Vertices;
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 
@@ -94,7 +93,7 @@ namespace FuckedUpPlatformer.Graphics.Buffers
             if (_isDisposed) return;
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferId);
-            GL.BufferData<V>(BufferTarget.ArrayBuffer, _vertexSize * vertices.Length, vertices, _bufferusagehint);
+            GL.BufferData(BufferTarget.ArrayBuffer, _vertexSize * vertices.Length, vertices, _bufferusagehint);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
@@ -103,7 +102,7 @@ namespace FuckedUpPlatformer.Graphics.Buffers
             if (_isDisposed) return;
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indexBufferId);
-            GL.BufferData<I>(BufferTarget.ArrayBuffer, _indexSize * indices.Length, indices, _bufferusagehint);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, _indexSize * indices.Length, indices, _bufferusagehint);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
         }
 
@@ -114,7 +113,7 @@ namespace FuckedUpPlatformer.Graphics.Buffers
             foreach (int i in _vertexAttributes)
                 GL.EnableVertexAttribArray(i);
 
-            GL.DrawElements(_primitiveType, 3, _drawElementsType, IntPtr.Zero);
+            GL.DrawElements(_primitiveType, indices, _drawElementsType, IntPtr.Zero);
 
             foreach (int i in _vertexAttributes)
                 GL.DisableVertexAttribArray(i);
