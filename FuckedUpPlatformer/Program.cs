@@ -5,7 +5,7 @@
         static void Main(string[] args)
         {
             //root node
-            new Core();
+            Core.Run();
         }
     }
 }

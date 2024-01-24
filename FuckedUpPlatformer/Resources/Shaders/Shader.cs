@@ -3,11 +3,25 @@ using OpenTK.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace FuckedUpPlatformer.Resources.Shaders
 {
     internal class Shader
     {
+        private const string VERTEX_SHADER_TAG = "$VERTEX$";
+        private const string FRAGMENT_SHADER_TAG = "$FRAGMENT$";
+
+        public string FilePath
+        {
+            get => _filePath;
+        }
+
+        public bool IsDisposed
+        {
+            get => _isDisposed;
+        }
+
         public ShaderUniform this[string name]
         {
             get
@@ -17,35 +31,59 @@ namespace FuckedUpPlatformer.Resources.Shaders
             }
         }
 
+        private string _filePath;
         private Dictionary<string, ShaderUniform> _uniforms;
         private int _programId;
+        private bool _isDisposed;
 
-        public Shader(string vertexSourceFilePath, string fragmentSourceFilePath)
+        public Shader(string filePath)
         {
+            _filePath = filePath;
             _uniforms = new Dictionary<string, ShaderUniform>();
-            var vertexSource = LoadShaderSource(vertexSourceFilePath);
-            var fragmentSource = LoadShaderSource(fragmentSourceFilePath);
+            LoadShaderSource(filePath, out var vertexSource, out var fragmentSource);
 
             var vertexShaderId = CreateShader(ShaderType.VertexShader, vertexSource);
             var fragmentShaderId = CreateShader(ShaderType.FragmentShader, fragmentSource);
             _programId = CreateProgram(vertexShaderId, fragmentShaderId);
+            _isDisposed = false;
         }
 
-        private string LoadShaderSource(string filePath)
+        private void LoadShaderSource(string filePath, out string vertexSource, out string fragmentSource)
         {
-            var path = string.Join(Path.DirectorySeparatorChar, Directory.GetCurrentDirectory(), filePath);
+            StringBuilder vertexSourceBuilder = new StringBuilder();
+            StringBuilder fragmentSourceBuilder = new StringBuilder();
 
-            if (!File.Exists(path))
-                throw new Exception("File doesnt exit!");
+            using (StreamReader sr = new StreamReader(File.OpenRead(filePath)))
+            {
+                StringBuilder currentBuilder = null;
+                string line = null;
 
-            return File.ReadAllText(path);
-        }
+                while ((line = sr.ReadLine()) != null)
+                {
+                    switch (line)
+                    {
+                        case VERTEX_SHADER_TAG:
+                            currentBuilder = vertexSourceBuilder;
+                            break;
+                        case FRAGMENT_SHADER_TAG:
+                            currentBuilder = fragmentSourceBuilder;
+                            break;
+                        default:
+                            currentBuilder?.AppendLine(line);
+                            break;
+                    }
+                }
+            }
+
+            vertexSource = vertexSourceBuilder.ToString();
+            fragmentSource = fragmentSourceBuilder.ToString();
+        }     
 
         private int CreateShader(ShaderType type, string source)
         {
             int shaderId = GL.CreateShader(type);
 
-            if(shaderId == 0) 
+            if (shaderId == 0)
                 throw new Exception($"Failed to create a {type} shader!");
 
             GL.ShaderSource(shaderId, source);
@@ -65,7 +103,7 @@ namespace FuckedUpPlatformer.Resources.Shaders
         {
             int programId = GL.CreateProgram();
 
-            if(programId == 0)
+            if (programId == 0)
                 throw new Exception($"Failed to create program!");
 
             GL.AttachShader(programId, vertexShaderId);
@@ -107,7 +145,18 @@ namespace FuckedUpPlatformer.Resources.Shaders
 
         public void Bind()
         {
-            GL.UseProgram(_programId);
+            if (!_isDisposed){
+                GL.UseProgram(_programId);
+            }
+        }
+
+        public void Dispose()
+        {
+            if (_isDisposed) return;
+
+            GL.DeleteProgram(_programId);
+            _programId = -1;
+            _isDisposed = true;
         }
     }
 }
