@@ -12,16 +12,19 @@ namespace FuckedUpPlatformer.Resources.Shaders
         private const string VERTEX_SHADER_TAG = "$VERTEX$";
         private const string FRAGMENT_SHADER_TAG = "$FRAGMENT$";
 
+        //Load filepath of shaders
         public string FilePath
         {
             get => _filePath;
         }
 
+        //Check if shader is disposed
         public bool IsDisposed
         {
             get => _isDisposed;
         }
 
+        //Return uniform shader object
         public ShaderUniform this[string name]
         {
             get
@@ -36,6 +39,7 @@ namespace FuckedUpPlatformer.Resources.Shaders
         private int _programId;
         private bool _isDisposed;
 
+        //Constructor
         public Shader(string filePath)
         {
             _filePath = filePath;
@@ -48,6 +52,7 @@ namespace FuckedUpPlatformer.Resources.Shaders
             _isDisposed = false;
         }
 
+        //Load information for shader
         private void LoadShaderSource(string filePath, out string vertexSource, out string fragmentSource)
         {
             StringBuilder vertexSourceBuilder = new StringBuilder();
@@ -78,14 +83,15 @@ namespace FuckedUpPlatformer.Resources.Shaders
             vertexSource = vertexSourceBuilder.ToString();
             fragmentSource = fragmentSourceBuilder.ToString();
         }     
-
+        
+        //Send shader data to GPU and compiles it
         private int CreateShader(ShaderType type, string source)
         {
             int shaderId = GL.CreateShader(type);
 
-            if (shaderId == 0)
-                throw new Exception($"Failed to create a {type} shader!");
+            if (shaderId == 0) throw new Exception($"Failed to create a {type} shader!");
 
+            //bad but good for now
             GL.ShaderSource(shaderId, source);
 
             GL.CompileShader(shaderId);
@@ -93,18 +99,17 @@ namespace FuckedUpPlatformer.Resources.Shaders
             int compileStatus;
             GL.GetShader(shaderId, ShaderParameter.CompileStatus, out compileStatus);
 
-            if (compileStatus == 0)
-                throw new Exception($"Failed to compile a {type} shader! \n{GL.GetShaderInfoLog(shaderId)}");
+            if (compileStatus == 0) throw new Exception($"Failed to compile a {type} shader! \n{GL.GetShaderInfoLog(shaderId)}");
 
             return shaderId;
         }
 
+        //Creates openGL pipeline
         private int CreateProgram(int vertexShaderId, int fragmentShaderId)
         {
             int programId = GL.CreateProgram();
 
-            if (programId == 0)
-                throw new Exception($"Failed to create program!");
+            if (programId == 0) throw new Exception($"Failed to create program!");
 
             GL.AttachShader(programId, vertexShaderId);
             GL.AttachShader(programId, fragmentShaderId);
@@ -113,8 +118,7 @@ namespace FuckedUpPlatformer.Resources.Shaders
             int linkStatus;
             GL.GetProgram(programId, GetProgramParameterName.LinkStatus, out linkStatus);
 
-            if (linkStatus == 0)
-                throw new Exception("Failed to link!");
+            if (linkStatus == 0) throw new Exception("Failed to link!");
 
             GL.DeleteShader(vertexShaderId);
             GL.DeleteShader(fragmentShaderId);
@@ -123,8 +127,7 @@ namespace FuckedUpPlatformer.Resources.Shaders
             int validationStatus;
             GL.GetProgram(programId, GetProgramParameterName.ValidateStatus, out validationStatus);
 
-            if (validationStatus == 0)
-                throw new Exception("Failed to validate!");
+            if (validationStatus == 0) throw new Exception("Failed to validate!");
 
             GL.GetProgram(programId, GetProgramParameterName.ActiveUniforms, out var numOfUniforms);
             for (int i = 0; i < numOfUniforms; i++)
@@ -143,6 +146,7 @@ namespace FuckedUpPlatformer.Resources.Shaders
             return programId;
         }
 
+        //given ID activate program that has been sent to the GPU
         public void Bind()
         {
             if (!_isDisposed){
@@ -150,6 +154,7 @@ namespace FuckedUpPlatformer.Resources.Shaders
             }
         }
 
+        //delete program from GPU
         public void Dispose()
         {
             if (_isDisposed) return;

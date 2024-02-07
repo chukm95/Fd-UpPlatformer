@@ -75,7 +75,6 @@ namespace FuckedUpPlatformer.Util
                 _isResizing = false;
                 _isResizeFinsihed = true;
             }
-            _nativeWindow.Context.SwapBuffers();
         }
     }
 }

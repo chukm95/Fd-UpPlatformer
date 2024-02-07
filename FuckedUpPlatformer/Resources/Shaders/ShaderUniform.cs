@@ -3,6 +3,7 @@ using OpenTK.Mathematics;
 
 namespace FuckedUpPlatformer.Resources.Shaders
 {
+    //uniform object of a shader
     internal class ShaderUniform
     {
         public ActiveUniformType UniformType => _type;
@@ -11,12 +12,16 @@ namespace FuckedUpPlatformer.Resources.Shaders
         private readonly string _name;
         private readonly ActiveUniformType _type;
 
+        //constructor of a shaderuniform
         internal ShaderUniform(int location, string name, ActiveUniformType type)
         {
             _location = location;
             _name = name;
             _type = type;
         }
+
+        //Set uniform given datatype (all functions below are of different types)
+
         public void SetUniform(bool value)
         {
             if (_type == ActiveUniformType.Bool)

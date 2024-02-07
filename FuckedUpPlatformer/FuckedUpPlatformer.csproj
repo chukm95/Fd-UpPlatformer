@@ -20,12 +20,6 @@
     <None Update="Assets\Shaders\BasicBasicShader.fsf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Shaders\BasicBasicShader\BasicBasicShader.frt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\Shaders\BasicBasicShader\BasicBasicShader.vrt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
