@@ -1,5 +1,7 @@
-﻿using FuckedUpPlatformer.Graphics.Batching;
+﻿using FuckedUpPlatformer.Graphics;
+using FuckedUpPlatformer.Graphics.Batching;
 using FuckedUpPlatformer.Graphics.Buffers;
+using FuckedUpPlatformer.Graphics.Cameras;
 using FuckedUpPlatformer.Graphics.Vertices;
 using FuckedUpPlatformer.Resources.Shaders;
 using FuckedUpPlatformer.Util;
@@ -14,18 +16,24 @@ using System.Runtime.InteropServices;
 namespace FuckedUpPlatformer
 {
     internal class Core {
+
+        public static Window Window => _instance._window;
+        public static GameTime GameTime => _instance._gameTime;
+
         private static Core _instance;
 
         private NativeWindow _nativeWindow;
         private Window _window;
         private ShaderManager _shaderManager;
+        private GameTime _gameTime;
         private bool _isRunning;
 
-        private Shader _basicBasicShader;
-        private ShaderUniform _su_projectionMatrix;
-        private ShaderUniform _su_transformMatrix;
+        //private Shader _basicBasicShader;
+        //private ShaderUniform _su_projectionMatrix;
+        //private ShaderUniform _su_transformMatrix;
 
-        private QuadBatcher _quadBatcher;
+        //private QuadBatcher _quadBatcher;
+
 
         //Constructor to have for singleton use
         private Core() {
@@ -49,21 +57,21 @@ namespace FuckedUpPlatformer
             }
         }
 
-        private struct rectPos {
-            public float rotation;
-            public Vector3 scale;
-            public Vector3 position;
-            public Color4 color;
-        }
+        //private struct rectPos {
+        //    public float rotation;
+        //    public Vector3 scale;
+        //    public Vector3 position;
+        //    public Color4 color;
+        //}
 
-        public Color4[] colors = new Color4[]{
-            Color4.Red,
-            Color4.Blue,
-            Color4.Green,
-            Color4.Orange
-        };
+        //public Color4[] colors = new Color4[]{
+        //    Color4.Red,
+        //    Color4.Blue,
+        //    Color4.Green,
+        //    Color4.Orange
+        //};
 
-        private rectPos[] positions;
+        //private rectPos[] positions;
 
         //Creates basic components for program
         private void Initialize()
@@ -84,28 +92,28 @@ namespace FuckedUpPlatformer
             _window = new Window(_nativeWindow);
             _window.OnCloseWindowRequest += () => { Core.Stop(); };
             _shaderManager = new ShaderManager();
-
+            _gameTime = new GameTime();
             _isRunning = true;
 
-            _basicBasicShader = _shaderManager.LoadShader("Assets\\Shaders\\BasicBasicShader.fsf");
-            _su_projectionMatrix = _basicBasicShader["projectionMatrix"];
-            _su_transformMatrix = _basicBasicShader["transformMatrix"];
+            //_basicBasicShader = _shaderManager.LoadShader("Assets\\Shaders\\BasicBasicShader.fsf");
+            //_su_projectionMatrix = _basicBasicShader["projectionMatrix"];
+            //_su_transformMatrix = _basicBasicShader["transformMatrix"];
 
-            Random r = new Random();
-            Vector3 offset = new Vector3(640, 360, 1000);
-            _quadBatcher = new QuadBatcher(20, BufferUsageHint.DynamicDraw);
+            //Random r = new Random();
+            //Vector3 offset = new Vector3(960, 540, 0);
+            //_quadBatcher = new QuadBatcher(20, BufferUsageHint.DynamicDraw);
 
-            positions = new rectPos[200];
+            //positions = new rectPos[200];
 
-            for (int i = 0; i < 200; i++)
-            {
-                positions[i] = new rectPos {
-                    rotation = MathHelper.DegreesToRadians(r.Next(359)),
-                    scale = new Vector3((float)(r.NextDouble()) + 0.5f),
-                    position = new Vector3(r.Next(1280), r.Next(720), 0) - offset,
-                    color = colors[r.Next(4)]
-                };
-            }
+            //for (int i = 0; i < 200; i++)
+            //{
+            //    positions[i] = new rectPos {
+            //        rotation = MathHelper.DegreesToRadians(r.Next(359)),
+            //        scale = new Vector3((float)(r.NextDouble()) + 0.5f),
+            //        position = new Vector3(r.Next(1920), r.Next(1080), 0) - offset,
+            //        color = colors[r.Next(4)]
+            //    };
+            //}
 
             //_quadBatcher.Begin();
             //for (int i = 0; i < 1; i++)
@@ -123,33 +131,38 @@ namespace FuckedUpPlatformer
             GL.Viewport(0, 0, 1920, 1080);
             GL.ClearColor(Color4.Gray);
 
-            Stopwatch sw = Stopwatch.StartNew();
+            Camera c = new OrthographicCamera(Vector3.Zero, MathUtil.ToRadians(new Vector3(0, 0, 45)), 1920, 1080, 1f, 2000f);
+            CameraController cc = new CameraController(_nativeWindow, c);
 
             while (_isRunning)
             {
+                _nativeWindow.NewInputFrame();
                 NativeWindow.ProcessWindowEvents(false);
+                _gameTime.Update();
 
-                GL.Clear(ClearBufferMask.DepthBufferBit | ClearBufferMask.ColorBufferBit);
-                _basicBasicShader.Bind();
-                _su_projectionMatrix.SetUniform(Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(72f), 1920f / 1080f, 1, 10000));
-                _su_transformMatrix.SetUniform(Matrix4.CreateTranslation(new Vector3(0, 0, -1000)));
+                //c.Update();
+                //cc.Update();
 
-                _quadBatcher.Begin();
-                for (int i = 0; i < 199; i++)
-                {
-                    rectPos r = positions[i];
-                    _quadBatcher.Batch(r.position, r.scale, new Vector3(0, 0, r.rotation), r.color);
-                }
-                rectPos x = positions[199];
-                    _quadBatcher.Batch(x.position, x.scale, new Vector3(0, 0, rot), x.color);
-                _quadBatcher.End();
+                //GL.Clear(ClearBufferMask.DepthBufferBit | ClearBufferMask.ColorBufferBit);
+                //_basicBasicShader.Bind();
+                //_su_projectionMatrix.SetUniform(c.ViewProjectionMatrix);
+                //_su_transformMatrix.SetUniform(Matrix4.CreateTranslation(new Vector3(0, 0, -1000)));
 
+                //_quadBatcher.Begin();
+                //for (int i = 0; i < 199; i++)
+                //{
+                //    rectPos r = positions[i];
+                //    _quadBatcher.Batch(r.position, r.scale, new Vector3(0, 0, r.rotation), r.color);
+                //}
+                //rectPos x = positions[199];
+                //    _quadBatcher.Batch(x.position, x.scale, new Vector3(0, 0, rot), x.color);
+                //_quadBatcher.End();
 
-                _quadBatcher.Draw();
+                //_quadBatcher.Draw();
+
+                //rot += MathHelper.DegreesToRadians(45f * _gameTime.Delta);
 
                 _nativeWindow.Context.SwapBuffers();
-                rot += MathHelper.DegreesToRadians(45f * (float)sw.Elapsed.TotalSeconds);
-                sw.Restart();
             }
         }
 
