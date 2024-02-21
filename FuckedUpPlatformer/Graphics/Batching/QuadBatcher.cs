@@ -22,7 +22,7 @@ namespace FuckedUpPlatformer.Graphics.Batching {
 
         private uint[] _templateIndices = new uint[] {
             0, 1, 2, 0, 2, 3
-        }; 
+        };
 
         private bool _isDisposed;
         private bool _isBatching;
@@ -34,7 +34,7 @@ namespace FuckedUpPlatformer.Graphics.Batching {
         private int _nrOfVertices;
         private GraphicsBuffer<VertexPositionColor, uint> _gb;
 
-        
+
 
         public QuadBatcher(int allocationStride, BufferUsageHint bufferUsageHint) {
             _isDisposed = false;
@@ -45,7 +45,7 @@ namespace FuckedUpPlatformer.Graphics.Batching {
             _vertices = new VertexPositionColor[allocationStride];
             _nrOfElements = 0;
             _nrOfVertices = 0;
-            _gb = new GraphicsBuffer<VertexPositionColor,uint>(PrimitiveType.Triangles, VertexPositionColor.Description, _bufferUsageHint, Marshal.SizeOf<VertexPositionColor>());
+            _gb = new GraphicsBuffer<VertexPositionColor, uint>(PrimitiveType.Triangles, VertexPositionColor.Description, _bufferUsageHint, Marshal.SizeOf<VertexPositionColor>());
         }
 
         public void Begin() {
@@ -59,9 +59,9 @@ namespace FuckedUpPlatformer.Graphics.Batching {
 
         public void Batch(Vector3 position, Vector3 scale, Vector3 rotation, Color4 color) {
             if (!_isBatching) throw new Exception($"Can't Batch Bitch!");
-            
+
             if (_nrOfElements + _templateIndices.Length >= _indices.Length) {
-                Array.Resize(ref _indices, _indices.Length+(_allocationStrideInQuads*_templateIndices.Length));
+                Array.Resize(ref _indices, _indices.Length + (_allocationStrideInQuads * _templateIndices.Length));
             }
             if (_nrOfVertices + _templateVertices.Length >= _vertices.Length) {
                 Array.Resize(ref _vertices, _vertices.Length + (_allocationStrideInQuads * _templateVertices.Length));
@@ -69,14 +69,14 @@ namespace FuckedUpPlatformer.Graphics.Batching {
 
             Matrix4 transform = Matrix4.CreateScale(scale) * Matrix4.CreateFromQuaternion(Quaternion.FromEulerAngles(rotation)) * Matrix4.CreateTranslation(position);
 
-            for (int i = 0; i<_templateVertices.Length ; i++) { 
-                ref VertexPositionColor v = ref _vertices[_nrOfVertices+i];
+            for (int i = 0; i < _templateVertices.Length; i++) {
+                ref VertexPositionColor v = ref _vertices[_nrOfVertices + i];
                 VertexPositionColor vt = _templateVertices[i];
                 v.Position = Vector3.TransformPosition(vt.Position, transform);
                 v.Color = vt.Color * (Vector4)color;
             }
-            
-            for (int i=0; i<_templateIndices.Length ; i++) {
+
+            for (int i = 0; i < _templateIndices.Length; i++) {
                 _indices[_nrOfElements + i] = _templateIndices[i] + (uint)_nrOfVertices;
             }
 

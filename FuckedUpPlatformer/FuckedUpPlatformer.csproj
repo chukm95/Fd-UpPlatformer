@@ -9,6 +9,10 @@
 
   <ItemGroup>
     <None Remove="Assets\Shaders\NewFile1.txt" />
+    <None Remove="GameStateManagement\IGameState" />
+    <None Remove="GameStateManagement\NewFile1.txt" />
+    <None Remove="GameStates\NewFile1.txt" />
+    <None Remove="GameStates\StateEnums" />
     <None Remove="Resources\Shaders\NewFile1.txt" />
   </ItemGroup>
 
