@@ -1,6 +1,4 @@
-﻿#1 cleanup
-#2 Gamestate management
-#3 Textures
+﻿#1 Textures
 .
 .
 .

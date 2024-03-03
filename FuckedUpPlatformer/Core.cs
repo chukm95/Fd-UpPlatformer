@@ -13,6 +13,7 @@ namespace FuckedUpPlatformer {
     internal class Core {
 
         public static Window Window => _instance._window;
+        public static ShaderManager ShaderManager => _instance._shaderManager;
         public static GameTime GameTime => _instance._gameTime;
         public static GameStateManager GameStateManager => _instance._gameStateManager;
 
@@ -68,9 +69,8 @@ namespace FuckedUpPlatformer {
             _gameStateManager = new GameStateManager();
             _isRunning = true;
 
-            _gameStateManager.Add(new TestState1());
-            _gameStateManager.Add(new TestState2());
-            _gameStateManager.Set(GameStateIdentifierz.TEST2);
+            _gameStateManager.Add(new TestState());
+            _gameStateManager.Set(GameStateIdentifierz.TEST1);
         }
 
         //the standard gameloop of updating shaders and objects
