@@ -3,21 +3,35 @@ using FuckedUpPlatformer.Graphics.Vertices;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FuckedUpPlatformer.Graphics.Batching {
-    internal class QuadBatcher {
+namespace FuckedUpPlatformer.Graphics.Batching
+{
+    internal class QuadBatcher
+    {
+        private static readonly Vector4 DEFAULT_FRAME = new Vector4(0, 0, 1, 1);
 
-        private VertexPositionColor[] _templateVertices = new VertexPositionColor[] {
-            new VertexPositionColor{ Position = new Vector3(-32, 32, 0), Color = (Vector4)Color4.White},
-            new VertexPositionColor{ Position = new Vector3(32, 32, 0), Color = (Vector4)Color4.White},
-            new VertexPositionColor{ Position = new Vector3(32, -32, 0), Color = (Vector4)Color4.White},
-            new VertexPositionColor{ Position = new Vector3(-32, -32, 0), Color = (Vector4)Color4.White}
+        private VertexPositionTextureColor[] _templateVertices = new VertexPositionTextureColor[] {
+            new VertexPositionTextureColor{
+                Position = new Vector3(-32, 32, 0),
+                TexCoord = new Vector2(0, 0),
+                Color = (Vector4)Color4.White
+            },
+            new VertexPositionTextureColor{
+                Position = new Vector3(32, 32, 0),
+                TexCoord = new Vector2(1, 0),
+                Color = (Vector4)Color4.White
+            },
+            new VertexPositionTextureColor{
+                Position = new Vector3(32, -32, 0),
+                TexCoord = new Vector2(1, 1),
+                Color = (Vector4)Color4.White
+            },
+            new VertexPositionTextureColor{
+                Position = new Vector3(-32, -32, 0),
+                TexCoord = new Vector2(0, 1),
+                Color = (Vector4)Color4.White
+            }
         };
 
         private uint[] _templateIndices = new uint[] {
@@ -26,13 +40,13 @@ namespace FuckedUpPlatformer.Graphics.Batching {
 
         private bool _isDisposed;
         private bool _isBatching;
-        private VertexPositionColor[] _vertices;
+        private VertexPositionTextureColor[] _vertices;
         private uint[] _indices;
         private int _allocationStrideInQuads;
         private BufferUsageHint _bufferUsageHint;
         private int _nrOfElements;
         private int _nrOfVertices;
-        private GraphicsBuffer<VertexPositionColor, uint> _gb;
+        private GraphicsBuffer<VertexPositionTextureColor, uint> _gb;
 
 
 
@@ -42,10 +56,10 @@ namespace FuckedUpPlatformer.Graphics.Batching {
             _bufferUsageHint = bufferUsageHint;
             _allocationStrideInQuads = allocationStride;
             _indices = new uint[allocationStride];
-            _vertices = new VertexPositionColor[allocationStride];
+            _vertices = new VertexPositionTextureColor[allocationStride];
             _nrOfElements = 0;
             _nrOfVertices = 0;
-            _gb = new GraphicsBuffer<VertexPositionColor, uint>(PrimitiveType.Triangles, VertexPositionColor.Description, _bufferUsageHint, Marshal.SizeOf<VertexPositionColor>());
+            _gb = new GraphicsBuffer<VertexPositionTextureColor, uint>(PrimitiveType.Triangles, VertexPositionTextureColor.Description, _bufferUsageHint, Marshal.SizeOf<VertexPositionTextureColor>());
         }
 
         public void Begin() {
@@ -56,8 +70,11 @@ namespace FuckedUpPlatformer.Graphics.Batching {
             _nrOfVertices = 0;
 
         }
-
         public void Batch(Vector3 position, Vector3 scale, Vector3 rotation, Color4 color) {
+            Batch(position, scale, rotation, color, DEFAULT_FRAME);
+        }
+
+        public void Batch(Vector3 position, Vector3 scale, Vector3 rotation, Color4 color, Vector4 frame) {
             if (!_isBatching) throw new Exception($"Can't Batch Bitch!");
 
             if (_nrOfElements + _templateIndices.Length >= _indices.Length) {
@@ -70,9 +87,10 @@ namespace FuckedUpPlatformer.Graphics.Batching {
             Matrix4 transform = Matrix4.CreateScale(scale) * Matrix4.CreateFromQuaternion(Quaternion.FromEulerAngles(rotation)) * Matrix4.CreateTranslation(position);
 
             for (int i = 0; i < _templateVertices.Length; i++) {
-                ref VertexPositionColor v = ref _vertices[_nrOfVertices + i];
-                VertexPositionColor vt = _templateVertices[i];
+                ref VertexPositionTextureColor v = ref _vertices[_nrOfVertices + i];
+                VertexPositionTextureColor vt = _templateVertices[i];
                 v.Position = Vector3.TransformPosition(vt.Position, transform);
+                v.TexCoord = new Vector2(frame.X +(vt.TexCoord.X * frame.Z), frame.Y + (vt.TexCoord.Y * frame.W));
                 v.Color = vt.Color * (Vector4)color;
             }
 

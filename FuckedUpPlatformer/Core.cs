@@ -7,6 +7,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using System;
+using System.Threading;
 
 
 namespace FuckedUpPlatformer {
@@ -70,7 +71,9 @@ namespace FuckedUpPlatformer {
             _isRunning = true;
 
             _gameStateManager.Add(new TestState());
-            _gameStateManager.Set(GameStateIdentifierz.TEST1);
+            _gameStateManager.Add(new TestState2());
+
+            _gameStateManager.Set(GameStateIdentifierz.TEST2);
         }
 
         //the standard gameloop of updating shaders and objects

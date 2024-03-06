@@ -76,6 +76,9 @@ namespace FuckedUpPlatformer.Graphics.Buffers
             {
                 switch (compDesc._componentType)
                 {
+                    case VertexComponetType.VEC2:
+                        GL.VertexAttribPointer(compDesc._componentBinding, 2, VertexAttribPointerType.Float, false, _vertexSize, compDesc._componentOffset);
+                        break;
                     case VertexComponetType.VEC3:
                         GL.VertexAttribPointer(compDesc._componentBinding, 3, VertexAttribPointerType.Float, false, _vertexSize, compDesc._componentOffset);
                         break;

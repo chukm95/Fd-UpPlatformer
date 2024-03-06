@@ -1,6 +1,7 @@
 ﻿#1 Textures
-.
-.
-.
-#? ECS
-#? Renderer
+
+#2 SpriteAtlas and animations 
+#3 cameraController
+#4 fix camera rotation issues
+#5 Loading and export level data
+#6 simple editor

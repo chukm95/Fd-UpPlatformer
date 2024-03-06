@@ -22,7 +22,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\Shaders\BasicTextureShader.fsf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Shaders\BasicBasicShader.fsf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Textures\TestFrameTexture.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Textures\TestTexture.png">
@@ -34,10 +40,6 @@
     <None Update="Assets\Textures\Test_Texture.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Assets\Textures\" />
   </ItemGroup>
 
 </Project>
