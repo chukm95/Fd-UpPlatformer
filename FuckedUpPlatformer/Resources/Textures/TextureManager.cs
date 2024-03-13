@@ -8,9 +8,11 @@ namespace FuckedUpPlatformer.Resources.Textures
 {
     internal class TextureManager
     {
+        private readonly string _defaultTextureSourcePath;
         private Dictionary<string, Texture> _textures;
 
-        internal TextureManager() {
+        internal TextureManager(string defaultTextureSourcePath) {
+            _defaultTextureSourcePath = defaultTextureSourcePath;
             _textures = new Dictionary<string, Texture>();
         }
 
@@ -20,7 +22,7 @@ namespace FuckedUpPlatformer.Resources.Textures
                 return _textures[filePath];
             }
             else {
-                var texture = new Texture(filePath);
+                var texture = new Texture(string.Concat(_defaultTextureSourcePath, filePath));
                 _textures.Add(filePath, texture);
                 return texture;
             }
@@ -39,7 +41,5 @@ namespace FuckedUpPlatformer.Resources.Textures
                 text.Dispose();
             }
         }
-
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FuckedUpPlatformer.GameStateManagement;
 using FuckedUpPlatformer.GameStates;
 using FuckedUpPlatformer.Resources.Shaders;
+using FuckedUpPlatformer.Resources.Textures;
 using FuckedUpPlatformer.Util;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -15,6 +16,7 @@ namespace FuckedUpPlatformer {
 
         public static Window Window => _instance._window;
         public static ShaderManager ShaderManager => _instance._shaderManager;
+        public static TextureManager TextureManager => _instance._textureManager;
         public static GameTime GameTime => _instance._gameTime;
         public static GameStateManager GameStateManager => _instance._gameStateManager;
 
@@ -23,6 +25,7 @@ namespace FuckedUpPlatformer {
         private NativeWindow _nativeWindow;
         private Window _window;
         private ShaderManager _shaderManager;
+        private TextureManager _textureManager;
         private GameTime _gameTime;
         private GameStateManager _gameStateManager;
         private bool _isRunning;
@@ -65,15 +68,14 @@ namespace FuckedUpPlatformer {
 
             _window = new Window(_nativeWindow);
             _window.OnCloseWindowRequest += () => { Core.Stop(); };
-            _shaderManager = new ShaderManager();
+            _shaderManager = new ShaderManager("FuckedUpPlatformer.Assets.Shaders.");
+            _textureManager = new TextureManager("FuckedUpPlatformer.Assets.Textures.");
             _gameTime = new GameTime();
             _gameStateManager = new GameStateManager();
             _isRunning = true;
 
-            _gameStateManager.Add(new TestState());
-            _gameStateManager.Add(new TestState2());
-
-            _gameStateManager.Set(GameStateIdentifierz.TEST2);
+            _gameStateManager.Add(new GS_Test());
+            _gameStateManager.Set(GameStateIdentifierz.TEST1);
         }
 
         //the standard gameloop of updating shaders and objects

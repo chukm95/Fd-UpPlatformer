@@ -3,6 +3,7 @@ using OpenTK.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace FuckedUpPlatformer.Resources.Shaders {
@@ -50,7 +51,7 @@ namespace FuckedUpPlatformer.Resources.Shaders {
             StringBuilder vertexSourceBuilder = new StringBuilder();
             StringBuilder fragmentSourceBuilder = new StringBuilder();
 
-            using (StreamReader sr = new StreamReader(File.OpenRead(filePath))) {
+            using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(filePath))) {
                 StringBuilder currentBuilder = null;
                 string line = null;
 

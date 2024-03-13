@@ -1,12 +1,18 @@
-﻿using SkiaSharp;
+﻿using OpenTK.Graphics.OpenGL4;
+using SkiaSharp;
 using System.IO;
-using OpenTK.Graphics.OpenGL4;
-using System;
+using System.Reflection;
 
 namespace FuckedUpPlatformer.Resources.Textures
 {
     internal class Texture
     {
+        public string FilePath => _filePath;
+        public int Width => _width;
+        public int Height => _height;
+        public bool IsDisposed => _isDisposed;
+
+        private string _filePath;
         private int _width;
         private int _height;
         private byte[] _pixels;
@@ -14,16 +20,14 @@ namespace FuckedUpPlatformer.Resources.Textures
         private bool _isDisposed;
 
         public Texture(string filePath) {
+            _filePath = filePath;
             LoadTexture(filePath);
             InitializeTexture();
-
             _isDisposed = false;
-
-            Console.WriteLine($"TextureId {_textureId}");
         }
 
         private void LoadTexture(string filepath) {
-            using (SKBitmap bmp = SKBitmap.Decode(File.Open(filepath, FileMode.Open))) {
+            using (SKBitmap bmp = SKBitmap.Decode(Assembly.GetExecutingAssembly().GetManifestResourceStream(filepath))) {
                 _width = bmp.Width;
                 _height = bmp.Height;
                 _pixels = bmp.Bytes;

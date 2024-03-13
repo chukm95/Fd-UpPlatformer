@@ -4,10 +4,12 @@ namespace FuckedUpPlatformer.Resources.Shaders
 {
     //dictionary of shaders <filepath of shader, shader object>
     internal class ShaderManager {
+        private readonly string _defaultShaderSourcePath;
         private Dictionary<string, Shader> _shaders;
 
         // constructor
-        public ShaderManager() {
+        public ShaderManager(string defaultShaderSourcePath) {
+            _defaultShaderSourcePath = defaultShaderSourcePath;
             _shaders = new Dictionary<string, Shader>();
         }
 
@@ -16,7 +18,7 @@ namespace FuckedUpPlatformer.Resources.Shaders
             if (_shaders.ContainsKey(filePath)) {
                 return _shaders[filePath];
             } else {
-                var shader = new Shader(filePath);
+                var shader = new Shader(string.Concat(_defaultShaderSourcePath, filePath));
                 _shaders.Add(filePath, shader);
                 return shader;
             }
