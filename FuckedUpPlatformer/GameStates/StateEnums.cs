@@ -2,6 +2,7 @@
 {
     internal enum GameStateIdentifierz
     {
-        TEST1
+        TEST1,
+        LEVEL_EDITOR
     }
 }

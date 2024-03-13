@@ -27,13 +27,16 @@ namespace FuckedUpPlatformer.Graphics
             Vector3 cameraPos = _camera.Position;
             Vector3 cameraVelocity = Vector3.Zero;
 
-            if(_nativeWindow.IsKeyDown(Keys.A) && !_nativeWindow.IsKeyDown(Keys.D))
-            {
+            if(_nativeWindow.IsKeyDown(Keys.A)) {
                 cameraVelocity.X += CAMERA_SPEED * _gameTime.Delta; 
-            }
-            else if(_nativeWindow.IsKeyDown(Keys.D) && !_nativeWindow.IsKeyDown(Keys.A))
-            {
+            } else if(_nativeWindow.IsKeyDown(Keys.D)) {
                 cameraVelocity.X -= CAMERA_SPEED * _gameTime.Delta;
+            }
+
+            if (_nativeWindow.IsKeyDown(Keys.W)) {
+                cameraVelocity.Y -= CAMERA_SPEED * _gameTime.Delta;
+            } else if (_nativeWindow.IsKeyDown(Keys.S)) {
+                cameraVelocity.Y += CAMERA_SPEED * _gameTime.Delta;
             }
 
             if (_nativeWindow.IsKeyDown(Keys.LeftShift))

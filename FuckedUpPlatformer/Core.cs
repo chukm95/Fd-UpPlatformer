@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace FuckedUpPlatformer {
     internal class Core {
-
+        public static NativeWindow NativeWindow => _instance._nativeWindow;
         public static Window Window => _instance._window;
         public static ShaderManager ShaderManager => _instance._shaderManager;
         public static TextureManager TextureManager => _instance._textureManager;
@@ -75,7 +75,9 @@ namespace FuckedUpPlatformer {
             _isRunning = true;
 
             _gameStateManager.Add(new GS_Test());
-            _gameStateManager.Set(GameStateIdentifierz.TEST1);
+            _gameStateManager.Add(new GS_Level_Editor());
+
+            _gameStateManager.Set(GameStateIdentifierz.LEVEL_EDITOR);
         }
 
         //the standard gameloop of updating shaders and objects
